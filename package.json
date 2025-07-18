@@ -1,0 +1,44 @@
+{
+    "name": "electron-regedit-fixed",
+    "version": "3.0.0",
+    "description": "File associations, file icons & open with... for electron apps. This is a fork of electron-regedit that fixes bugs where descriptions and path names with spaces in them cause errors.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "windows",
+        "registry",
+        "electron",
+        "file",
+        "association",
+        "open",
+        "with",
+        "default",
+        "application"
+    ],
+    "author": {
+        "name": "8Crafter",
+        "email": "8crafteryt@gmail.com",
+        "url": "https://www.8crafter.com"
+    },
+    "contributors": [
+        "Tympanix",
+        {
+            "name": "8Crafter",
+            "email": "8crafteryt@gmail.com",
+            "url": "https://www.8crafter.com"
+        }
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "debug": "^2.6.0",
+        "q": "^1.4.1",
+        "winreg": "^1.2.2"
+    },
+    "devDependencies": {
+        "@types/debug": "^4.1.12",
+        "electron": "^8.0.0"
+    }
+}
+
