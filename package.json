@@ -17,6 +17,14 @@
         "default",
         "application"
     ],
+    "homepage": "https://github.com/8Crafter-Studios/electron-regedit-fixed#readme",
+    "bugs": {
+        "url": "https://github.com/8Crafter-Studios/electron-regedit-fixed/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/8Crafter-Studios/electron-regedit-fixed.git"
+    },
     "author": {
         "name": "8Crafter",
         "email": "8crafteryt@gmail.com",
