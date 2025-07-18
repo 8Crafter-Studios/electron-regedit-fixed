@@ -107,7 +107,15 @@ class ProgId {
                 key: `\\Software\\Classes\\.${ext}\\OpenWithProgids`,
             });
 
-            return $create(registry).then(() => $set(registry, self.progId, Registry.REG_SZ, ""));
+            return $create(registry).then(() =>
+                $set(
+                    registry,
+                    self.progId,
+                    Registry.REG_SZ,
+                    // THIS STRING MUST HAVE QUOTES IN IT, OTHERWISE IT WILL CREATE A CPU LEAK!
+                    '""'
+                )
+            );
         }
     }
 }
@@ -121,3 +129,4 @@ function bindShells(prog, shell) {
 }
 
 module.exports = ProgId;
+
