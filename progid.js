@@ -22,6 +22,9 @@ class ProgId {
         icon,
         shell = [],
         extensions = [],
+        contentType = undefined,
+        perceivedType = undefined,
+        setDefault = false,
     }) {
         this.progId = progExt ? `${appName}.${progExt}` : `${appName}`;
         this.appName = appName;
@@ -31,6 +34,9 @@ class ProgId {
         this.squirrel = squirrel;
         this.friendlyAppName = friendlyAppName;
         this.extensions = extensions;
+        this.contentType = contentType;
+        this.perceivedType = perceivedType;
+        this.setDefault = setDefault;
         this.shell = bindShells(this, shell);
         this.BASE_KEY = `\\Software\\Classes\\${this.appName}`;
         Regedit.add(this);
@@ -97,8 +103,44 @@ class ProgId {
         }
 
         function registerFileAssociations() {
-            let extensions = self.extensions.map((ext) => registerFileExtension(ext));
+            let extensions = self.extensions.map((ext) => registerFileExtension(ext).then(() => registerMIMEType(ext)));
             return Q.all(extensions);
+        }
+
+        function registerMIMEType(ext) {
+            let registry = new Registry({
+                hive: self.hive,
+                key: `\\Software\\Classes\\.${ext}`,
+            });
+
+            return $create(registry).then(() =>
+                Q.all([
+                    ...(self.contentType !== undefined
+                        ? [
+                              $set(
+                                  registry,
+                                  // Should have a space.
+                                  '"Content Type"',
+                                  Registry.REG_SZ,
+                                  // THIS STRING MUST HAVE QUOTES IN IT, OTHERWISE IT WILL CREATE A CPU LEAK!
+                                  `"${self.contentType}"`
+                              ),
+                          ]
+                        : []),
+                    ...(self.perceivedType !== undefined
+                        ? [
+                              $set(
+                                  registry,
+                                  // Should not have a space.
+                                  '"PerceivedType"',
+                                  Registry.REG_SZ,
+                                  // THIS STRING MUST HAVE QUOTES IN IT, OTHERWISE IT WILL CREATE A CPU LEAK!
+                                  `"${self.perceivedType}"`
+                              ),
+                          ]
+                        : []),
+                ])
+            );
         }
 
         function registerFileExtension(ext) {
@@ -106,15 +148,24 @@ class ProgId {
                 hive: self.hive,
                 key: `\\Software\\Classes\\.${ext}\\OpenWithProgids`,
             });
+            let registryB = new Registry({
+                hive: self.hive,
+                key: `\\Software\\Classes\\.${ext}\\OpenWithProgids`,
+            });
 
             return $create(registry).then(() =>
-                $set(
-                    registry,
-                    self.progId,
-                    Registry.REG_SZ,
-                    // THIS STRING MUST HAVE QUOTES IN IT, OTHERWISE IT WILL CREATE A CPU LEAK!
-                    '""'
-                )
+                Q.all([
+                    $set(
+                        registry,
+                        self.progId,
+                        Registry.REG_SZ,
+                        // THIS STRING MUST HAVE QUOTES IN IT, OTHERWISE IT WILL CREATE A CPU LEAK!
+                        '""'
+                    ),
+                    ...(self.setDefault
+                        ? [$create(registryB).then(() => $set(registryB, Registry.DEFAULT_VALUE, Registry.REG_SZ, '"' + self.progId + '"'))]
+                        : []),
+                ])
             );
         }
     }

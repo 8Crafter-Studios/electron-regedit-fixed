@@ -78,6 +78,28 @@ declare module "electron-regedit-fixed" {
          */
         public extensions: string[];
         /**
+         * The MIME content type of the ProgId.
+         *
+         * @default undefined
+         *
+         * @example "image/ORI"
+         */
+        public contentType: string | undefined;
+        /**
+         * The MIME perceived type of the ProgId.
+         *
+         * @default undefined
+         *
+         * @example "image"
+         */
+        public perceivedType: string | undefined;
+        /**
+         * Whether to set this ProgId as the default application the program opens with.
+         *
+         * @default false
+         */
+        public setDefault: boolean;
+        /**
          * The ShellOptions of the ProgId.
          *
          * @default []
@@ -102,6 +124,9 @@ declare module "electron-regedit-fixed" {
          * @param param0.icon The icon of the ShellOption.
          * @param param0.shell The ShellOptions of the ProgId.
          * @param param0.extensions The extensions of the ProgId.
+         * @param param0.contentType The MIME content type of the ProgId.
+         * @param param0.perceivedType The MIME perceived type of the ProgId.
+         * @param param0.setDefault Whether to set this ProgId as the default application the program opens with.
          */
         public constructor({
             progExt,
@@ -113,6 +138,9 @@ declare module "electron-regedit-fixed" {
             icon,
             shell,
             extensions,
+            contentType,
+            perceivedType,
+            setDefault,
         }: {
             progExt?: string | undefined;
             appName?: string | undefined;
@@ -123,6 +151,9 @@ declare module "electron-regedit-fixed" {
             icon: string | undefined;
             shell?: ShellOption[] | undefined;
             extensions?: string[] | undefined;
+            contentType?: string | undefined;
+            perceivedType?: string | undefined;
+            setDefault?: boolean | undefined;
         });
         public uninstall(): false | Promise<void>;
         public install(): false | Promise<void>;
