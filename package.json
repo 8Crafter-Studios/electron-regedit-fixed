@@ -1,6 +1,6 @@
 {
     "name": "electron-regedit-fixed",
-    "version": "3.1.0",
+    "version": "3.2.0",
     "description": "File associations, file icons & open with... for electron apps. This is a fork of electron-regedit that fixes bugs where descriptions and path names with spaces in them cause errors.",
     "main": "index.js",
     "scripts": {
